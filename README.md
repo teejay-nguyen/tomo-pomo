@@ -18,10 +18,10 @@ git clone https://github.com/teejay-nguyen/tomo-pomo.git
 cd tomo-pomo
 
 # Install dependencies
-npm install
+npm i
 
 # Run the app
-npm start
+npm run start
 ```
 ## Build
 To package the app for distribution:
