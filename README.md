@@ -11,6 +11,7 @@ Tomo-Pomo is a simple and effective Pomodoro timer built using Electron.js. Desi
 - Easy cross-platform compatibility: Runs on Windows, macOS, and Linux with a single codebase.
 - Native-like experience: Electron enables smooth UI interactions and system-level features like notifications.
 - JavaScript-based: Simplifies development using familiar web technologies.
+- Node.js integration: Enables server-side logic using Node.js directly in the app.
 ## Installation
 ```
 # Clone the repository
@@ -18,10 +19,10 @@ git clone https://github.com/teejay-nguyen/tomo-pomo.git
 cd tomo-pomo
 
 # Install dependencies
-npm install
+npm i
 
 # Run the app
-npm start
+npm run start
 ```
 ## Build
 To package the app for distribution:
