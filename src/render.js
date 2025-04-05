@@ -1,13 +1,5 @@
 const { ipcRenderer } = require("electron");
 
-document.getElementById("close-btn").addEventListener("click", () => {
-  ipcRenderer.send("close-app");
-});
-
-document.getElementById("minimize-btn").addEventListener("click", () => {
-  ipcRenderer.send("minimize-app");
-});
-
 let timeLeft = 10;
 let countdownInterval = null;
 const timerElement = document.getElementById("timer");
@@ -31,6 +23,13 @@ function startCountdown() {
   }, 1000);
 }
 
+function pauseCountdown() {
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+  }
+}
+
 function resetCountdown() {
   clearInterval(countdownInterval);
   countdownInterval = null;
@@ -39,16 +38,15 @@ function resetCountdown() {
 }
 
 startBtn.addEventListener("click", startCountdown);
+pauseBtn.addEventListener("click", pauseCountdown);
 resetBtn.addEventListener("click", resetCountdown);
 
 updateTimerDisplay();
 
-// const countdown = setInterval(() => {
-//   timeLeft--;
-//   timerElement.textContent = timeLeft;
+document.getElementById("close-btn").addEventListener("click", () => {
+  ipcRenderer.send("close-app");
+});
 
-//   if (timeLeft <= 0) {
-//     clearInterval(countdown);
-//     timerElement.textContent = "Time's up!";
-//   }
-// }, 1000);
+document.getElementById("minimize-btn").addEventListener("click", () => {
+  ipcRenderer.send("minimize-app");
+});
