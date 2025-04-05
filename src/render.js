@@ -1,5 +1,7 @@
 const { ipcRenderer } = require("electron");
 
+let userMinutes = 25;
+let initialTime = userMinutes * 60;
 let timeLeft = 10;
 let countdownInterval = null;
 const timerElement = document.getElementById("timer");
@@ -8,7 +10,15 @@ const pauseBtn = document.getElementById("pause-btn");
 const resetBtn = document.getElementById("reset-btn");
 
 function updateTimerDisplay() {
-  timerElement.textContent = timeLeft > 0 ? timeLeft : "Time's up!";
+  timerElement.textContent = formatTime(timeLeft);
+}
+
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const secondsRemaining = seconds % 60;
+  return `${minutes.toString().padStart(2, "0")}:${secondsRemaining
+    .toString()
+    .padStart(2, "0")}`;
 }
 
 function startCountdown() {
