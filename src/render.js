@@ -5,6 +5,7 @@ let initialTime = userMinutes * 60;
 let timeLeft = 10;
 let countdownInterval = null;
 const timerElement = document.getElementById("timer");
+const setTimerBtn = document.getElementById("set-timer-btn");
 const startBtn = document.getElementById("start-btn");
 const pauseBtn = document.getElementById("pause-btn");
 const resetBtn = document.getElementById("reset-btn");
@@ -58,7 +59,7 @@ function setNewTimer() {
   }
 }
 
-setBtn.addEventListener("click", setNewTimer);
+setTimerBtn.addEventListener("click", setNewTimer);
 startBtn.addEventListener("click", startCountdown);
 pauseBtn.addEventListener("click", pauseCountdown);
 resetBtn.addEventListener("click", resetCountdown);
