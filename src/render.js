@@ -43,14 +43,13 @@ function pauseCountdown() {
 function resetCountdown() {
   clearInterval(countdownInterval);
   countdownInterval = null;
-  timeLeft = 10;
+  timeLeft = userMinutes * 60;
   updateTimerDisplay();
 }
 
 function setNewTimer() {
-  const minutes = parseInt(minutesInput.value, 10);
-  if (!isNaN(minutes) && minutes > 0) {
-    userMinutes = minutes;
+  userMinutes = parseInt(minutesInput.value, 10);
+  if (!isNaN(userMinutes) && userMinutes > 0) {
     initialTime = userMinutes * 60;
     timeLeft = initialTime;
     clearInterval(countdownInterval);
