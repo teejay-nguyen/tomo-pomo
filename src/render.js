@@ -73,3 +73,9 @@ document.getElementById("close-btn").addEventListener("click", () => {
 document.getElementById("minimize-btn").addEventListener("click", () => {
   ipcRenderer.send("minimize-app");
 });
+
+document.addEventListener("dblclick", (e) => {
+  if (e.target.closest(".draggable")) {
+    e.preventDefault();
+  }
+});

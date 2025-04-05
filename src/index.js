@@ -15,6 +15,7 @@ app.whenReady().then(() => {
     height: 400,
     frame: false,
     resizable: false,
+    maximizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
