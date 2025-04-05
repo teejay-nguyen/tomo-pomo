@@ -47,6 +47,19 @@ function resetCountdown() {
   updateTimerDisplay();
 }
 
+function setNewTimer() {
+  const minutes = parseInt(minutesInput.value, 10);
+  if (!isNaN(minutes) && minutes > 0) {
+    userMinutes = minutes;
+    initialTime = userMinutes * 60;
+    timeLeft = initialTime;
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+    updateTimerDisplay();
+  }
+}
+
+setBtn.addEventListener("click", setNewTimer);
 startBtn.addEventListener("click", startCountdown);
 pauseBtn.addEventListener("click", pauseCountdown);
 resetBtn.addEventListener("click", resetCountdown);
