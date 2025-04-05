@@ -1,8 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('node:path');
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("node:path");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
+if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
@@ -14,26 +14,27 @@ app.whenReady().then(() => {
     width: 400,
     height: 400,
     frame: false,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, "index.html"));
 });
 
-ipcMain.on ('close-app', () => {
+ipcMain.on("close-app", () => {
   mainWindow.close();
 });
 
-ipcMain.on ('minimize-app', () => {
+ipcMain.on("minimize-app", () => {
   mainWindow.minimize();
 });
 
-ipcMain.on ('maximize-app', () => {
+ipcMain.on("maximize-app", () => {
   if (mainWindow.isMaximized()) {
     mainWindow.unmaximize();
   } else {
