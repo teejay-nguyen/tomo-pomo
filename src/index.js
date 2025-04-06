@@ -1,5 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
+const fs = require("fs");
+
+const dataFile = path.join(__dirname, "study-log.json");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -41,4 +44,18 @@ ipcMain.on("maximize-app", () => {
   } else {
     mainWindow.maximize();
   }
+});
+
+ipcMain.on("save-study-time", (event, secondsStudied) => {
+  const today = new Date().toISOString().slice(0, 10);
+  let data = {};
+
+  if (fs.existsSync(dataFile)) {
+    data = JSON.parse(fs.readFileSync(dataFile));
+  }
+
+  if (!data[today]) data[today] = 0;
+  data[today] += secondsStudied;
+
+  fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
 });

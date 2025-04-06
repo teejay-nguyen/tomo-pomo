@@ -4,6 +4,8 @@ let userMinutes = 25;
 let initialTime = userMinutes * 60;
 let timeLeft = 10;
 let countdownInterval = null;
+let studiedSeconds = 0;
+
 const timerElement = document.getElementById("timer");
 const setTimerBtn = document.getElementById("set-timer-btn");
 const startBtn = document.getElementById("start-btn");
@@ -26,13 +28,17 @@ function formatTime(seconds) {
 }
 
 function startCountdown() {
-  if (countdownInterval) return;
+  if (countdownInterval || timeLeft <= 0) return;
   countdownInterval = setInterval(() => {
     timeLeft--;
+    studiedSeconds++;
     updateTimerDisplay();
+
     if (timeLeft <= 0) {
       clearInterval(countdownInterval);
       countdownInterval = null;
+      ipcRenderer.send("save-study-time", studiedSeconds);
+      studiedSeconds = 0;
     }
   }, 1000);
 }
