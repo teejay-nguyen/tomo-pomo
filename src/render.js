@@ -9,6 +9,9 @@ const setTimerBtn = document.getElementById("set-timer-btn");
 const startBtn = document.getElementById("start-btn");
 const pauseBtn = document.getElementById("pause-btn");
 const resetBtn = document.getElementById("reset-btn");
+const shortBreakBtn = document.getElementById("shortBreakBtn");
+const longBreakBtn = document.getElementById("longBreakBtn");
+const minutesInput = document.getElementById("minutesInput");
 
 function updateTimerDisplay() {
   timerElement.textContent = formatTime(timeLeft);
@@ -58,6 +61,20 @@ function setNewTimer() {
     updateTimerDisplay();
   }
 }
+
+shortBreakBtn.addEventListener("click", () => {
+  userMinutes = 5;
+  timeLeft = userMinutes * 60;
+  updateTimerDisplay();
+  startCountdown();
+});
+
+longBreakBtn.addEventListener("click", () => {
+  userMinutes = 15;
+  timeLeft = userMinutes * 60;
+  updateTimerDisplay();
+  startCountdown();
+});
 
 setTimerBtn.addEventListener("click", setNewTimer);
 startBtn.addEventListener("click", startCountdown);
