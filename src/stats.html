@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Study Stats</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      canvas {
+        max-width: 100%;
+        margin-top: 30px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Study Stats</h1>
+    <canvas id="statsChart" height="150"></canvas>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Time Studied</th>
+        </tr>
+      </thead>
+      <tbody id="statsBody">
+        <!-- Data goes here -->
+      </tbody>
+    </table>
+  </body>
+  <script>
+    window.electronAPI.getStudyData().then((data) => {
+      console.log("Study data loaded:", data); // DEBUG
+      const tbody = document.getElementById("statsBody");
+
+      const labels = [];
+      const minutes = [];
+
+      Object.entries(data)
+        .sort()
+        .forEach(([date, seconds]) => {
+          const mins = Math.floor(seconds / 60);
+          labels.push(date);
+          minutes.push(mins);
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${date}</td><td>${mins} min</td>`;
+          tbody.appendChild(tr);
+        });
+
+      // Chart.js rendering
+      const ctx = document.getElementById("studyChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Minutes Studied",
+              data: minutes,
+              backgroundColor: "#4caf50",
+              borderRadius: 6,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "Minutes",
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "Date",
+              },
+            },
+          },
+        },
+      });
+    });
+  </script>
+</html>

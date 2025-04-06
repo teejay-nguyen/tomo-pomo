@@ -68,8 +68,8 @@ ipcMain.handle("get-study-data", () => {
 
 ipcMain.on("open-stats-window", () => {
   const statsWindow = new BrowserWindow({
-    width: 800,
-    height: 800,
+    width: 400,
+    height: 400,
     frame: false,
     resizable: false,
     maximizable: false,

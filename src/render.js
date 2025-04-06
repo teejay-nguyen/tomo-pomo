@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let userMinutes = 25;
   let initialTime = userMinutes * 60;
-  let timeLeft = 10;
+  let timeLeft = initialTime;
   let countdownInterval = null;
   let studiedSeconds = 0;
 
