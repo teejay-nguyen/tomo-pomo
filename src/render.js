@@ -1,4 +1,4 @@
-const { ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 
 let userMinutes = 25;
 let initialTime = userMinutes * 60;
@@ -101,4 +101,8 @@ document.addEventListener("dblclick", (e) => {
   if (e.target.closest(".draggable")) {
     e.preventDefault();
   }
+});
+
+contextBridge.exposeInMainWorld("electronAPI", {
+  getStudyData: () => ipcRenderer.invoke("get-study-data"),
 });

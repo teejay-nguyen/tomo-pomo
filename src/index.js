@@ -59,3 +59,10 @@ ipcMain.on("save-study-time", (event, secondsStudied) => {
 
   fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
 });
+
+ipcMain.handle("get-study-data", () => {
+  if (fs.existsSync(dataFile)) {
+    return JSON.parse(fs.readFileSync(dataFile));
+  }
+  return {};
+});
