@@ -20,8 +20,7 @@ app.whenReady().then(() => {
     resizable: false,
     maximizable: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     },
   });
@@ -65,4 +64,20 @@ ipcMain.handle("get-study-data", () => {
     return JSON.parse(fs.readFileSync(dataFile));
   }
   return {};
+});
+
+ipcMain.on("open-stats-window", () => {
+  const statsWindow = new BrowserWindow({
+    width: 800,
+    height: 800,
+    frame: false,
+    resizable: false,
+    maximizable: false,
+    webPreferences: {
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload.js"),
+    },
+  });
+
+  statsWindow.loadFile(path.join(__dirname, "stats.html"));
 });

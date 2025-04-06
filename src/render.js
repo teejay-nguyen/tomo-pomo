@@ -1,108 +1,110 @@
-const { contextBridge, ipcRenderer } = require("electron");
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("window.electronAPI:", window.electronAPI);
 
-let userMinutes = 25;
-let initialTime = userMinutes * 60;
-let timeLeft = 10;
-let countdownInterval = null;
-let studiedSeconds = 0;
+  let userMinutes = 25;
+  let initialTime = userMinutes * 60;
+  let timeLeft = 10;
+  let countdownInterval = null;
+  let studiedSeconds = 0;
 
-const timerElement = document.getElementById("timer");
-const setTimerBtn = document.getElementById("set-timer-btn");
-const startBtn = document.getElementById("start-btn");
-const pauseBtn = document.getElementById("pause-btn");
-const resetBtn = document.getElementById("reset-btn");
-const shortBreakBtn = document.getElementById("shortBreakBtn");
-const longBreakBtn = document.getElementById("longBreakBtn");
-const minutesInput = document.getElementById("minutesInput");
+  const timerElement = document.getElementById("timer");
+  const setTimerBtn = document.getElementById("set-timer-btn");
+  const startBtn = document.getElementById("start-btn");
+  const pauseBtn = document.getElementById("pause-btn");
+  const resetBtn = document.getElementById("reset-btn");
+  const shortBreakBtn = document.getElementById("shortBreakBtn");
+  const longBreakBtn = document.getElementById("longBreakBtn");
+  const minutesInput = document.getElementById("minutesInput");
 
-function updateTimerDisplay() {
-  timerElement.textContent = formatTime(timeLeft);
-}
+  function updateTimerDisplay() {
+    timerElement.textContent = formatTime(timeLeft);
+  }
 
-function formatTime(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  const secondsRemaining = seconds % 60;
-  return `${minutes.toString().padStart(2, "0")}:${secondsRemaining
-    .toString()
-    .padStart(2, "0")}`;
-}
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secondsRemaining = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${secondsRemaining
+      .toString()
+      .padStart(2, "0")}`;
+  }
 
-function startCountdown() {
-  if (countdownInterval || timeLeft <= 0) return;
-  countdownInterval = setInterval(() => {
-    timeLeft--;
-    studiedSeconds++;
-    updateTimerDisplay();
+  function startCountdown() {
+    if (countdownInterval || timeLeft <= 0) return;
+    countdownInterval = setInterval(() => {
+      timeLeft--;
+      studiedSeconds++;
+      updateTimerDisplay();
 
-    if (timeLeft <= 0) {
+      if (timeLeft <= 0) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        window.electronAPI.saveStudyTime(studiedSeconds);
+        studiedSeconds = 0;
+      }
+    }, 1000);
+  }
+
+  function pauseCountdown() {
+    if (countdownInterval) {
       clearInterval(countdownInterval);
       countdownInterval = null;
-      ipcRenderer.send("save-study-time", studiedSeconds);
-      studiedSeconds = 0;
     }
-  }, 1000);
-}
-
-function pauseCountdown() {
-  if (countdownInterval) {
-    clearInterval(countdownInterval);
-    countdownInterval = null;
   }
-}
 
-function resetCountdown() {
-  clearInterval(countdownInterval);
-  countdownInterval = null;
-  timeLeft = userMinutes * 60;
-  updateTimerDisplay();
-}
-
-function setNewTimer() {
-  userMinutes = parseInt(minutesInput.value, 10);
-  if (!isNaN(userMinutes) && userMinutes > 0) {
-    initialTime = userMinutes * 60;
-    timeLeft = initialTime;
+  function resetCountdown() {
     clearInterval(countdownInterval);
     countdownInterval = null;
+    timeLeft = userMinutes * 60;
     updateTimerDisplay();
   }
-}
 
-shortBreakBtn.addEventListener("click", () => {
-  userMinutes = 5;
-  timeLeft = userMinutes * 60;
-  updateTimerDisplay();
-  startCountdown();
-});
-
-longBreakBtn.addEventListener("click", () => {
-  userMinutes = 15;
-  timeLeft = userMinutes * 60;
-  updateTimerDisplay();
-  startCountdown();
-});
-
-setTimerBtn.addEventListener("click", setNewTimer);
-startBtn.addEventListener("click", startCountdown);
-pauseBtn.addEventListener("click", pauseCountdown);
-resetBtn.addEventListener("click", resetCountdown);
-
-updateTimerDisplay();
-
-document.getElementById("close-btn").addEventListener("click", () => {
-  ipcRenderer.send("close-app");
-});
-
-document.getElementById("minimize-btn").addEventListener("click", () => {
-  ipcRenderer.send("minimize-app");
-});
-
-document.addEventListener("dblclick", (e) => {
-  if (e.target.closest(".draggable")) {
-    e.preventDefault();
+  function setNewTimer() {
+    userMinutes = parseInt(minutesInput.value, 10);
+    if (!isNaN(userMinutes) && userMinutes > 0) {
+      initialTime = userMinutes * 60;
+      timeLeft = initialTime;
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+      updateTimerDisplay();
+    }
   }
-});
 
-contextBridge.exposeInMainWorld("electronAPI", {
-  getStudyData: () => ipcRenderer.invoke("get-study-data"),
+  shortBreakBtn.addEventListener("click", () => {
+    userMinutes = 5;
+    timeLeft = userMinutes * 60;
+    updateTimerDisplay();
+    startCountdown();
+  });
+
+  longBreakBtn.addEventListener("click", () => {
+    userMinutes = 15;
+    timeLeft = userMinutes * 60;
+    updateTimerDisplay();
+    startCountdown();
+  });
+
+  setTimerBtn.addEventListener("click", setNewTimer);
+  startBtn.addEventListener("click", startCountdown);
+  pauseBtn.addEventListener("click", pauseCountdown);
+  resetBtn.addEventListener("click", resetCountdown);
+
+  updateTimerDisplay();
+
+  document.getElementById("stats-btn").addEventListener("click", () => {
+    window.electronAPI.openStatsWindow();
+  });
+
+  document.getElementById("close-btn").addEventListener("click", () => {
+    window.electronAPI.closeApp();
+  });
+
+  document.getElementById("minimize-btn").addEventListener("click", () => {
+    window.electronAPI.minimizeApp();
+  });
+
+  document.addEventListener("dblclick", (e) => {
+    if (e.target.closest(".draggable")) {
+      e.preventDefault();
+    }
+  });
 });
