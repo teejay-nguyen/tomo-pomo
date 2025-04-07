@@ -74,6 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const seconds = parseInt(match[2], 10);
     const totalSeconds = minutes * 60 + seconds;
 
+    userMinutes = minutes; // Update global userMinutes variable
+
     setNewTimerFromSeconds(totalSeconds);
   }
 
