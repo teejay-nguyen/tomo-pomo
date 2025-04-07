@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const resetBtn = document.getElementById("reset-btn");
   const shortBreakBtn = document.getElementById("shortBreakBtn");
   const longBreakBtn = document.getElementById("longBreakBtn");
-  const minutesInput = document.getElementById("minutesInput");
+  const timeInput = document.getElementById("timeInput");
 
   function updateTimerDisplay() {
     timerElement.textContent = formatTime(timeLeft);
@@ -59,14 +59,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setNewTimer() {
-    userMinutes = parseInt(minutesInput.value, 10);
-    if (!isNaN(userMinutes) && userMinutes > 0) {
-      initialTime = userMinutes * 60;
-      timeLeft = initialTime;
-      clearInterval(countdownInterval);
-      countdownInterval = null;
-      updateTimerDisplay();
+    const input = document.getElementById("timeInput").value.trim();
+    const match = input.match(/^(\d{1,2}):([0-5]\d)$/);
+
+    if (!match) {
+      alert("Please enter a valid time in MM:SS format (e.g., 25:00)");
+      return;
     }
+
+    const minutes = parseInt(match[1], 10);
+    const seconds = parseInt(match[2], 10);
+    const totalSeconds = minutes * 60 + seconds;
+
+    setNewTimerFromSeconds(totalSeconds);
+  }
+
+  function setNewTimerFromSeconds(seconds) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+    initialTime = seconds;
+    timeLeft = seconds;
+    studiedSeconds = 0;
+    updateTimerDisplay();
   }
 
   shortBreakBtn.addEventListener("click", () => {
@@ -105,6 +119,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("dblclick", (e) => {
     if (e.target.closest(".draggable")) {
       e.preventDefault();
+    }
+  });
+
+  document.getElementById("timeInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      setTimerBtn.click();
     }
   });
 });

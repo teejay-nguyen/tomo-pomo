@@ -21,8 +21,13 @@
     </div>
 
     <div class="timer-settings">
-      <label for="minutesInput">Minutes:</label>
-      <input type="number" id="minutesInput" min="1" max="60" value="25" />
+      <label for="timeInput">Minutes:</label>
+      <input
+        type="text"
+        id="timeInput"
+        placeholder="25:00"
+        pattern="\d{1,2}:\d{2}"
+      />
       <button id="set-timer-btn">Set Timer</button>
     </div>
 
