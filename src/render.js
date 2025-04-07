@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const shortBreakBtn = document.getElementById("shortBreakBtn");
   const longBreakBtn = document.getElementById("longBreakBtn");
   const timeInput = document.getElementById("timeInput");
+  const errorMsg = document.getElementById("errorMsg");
 
   function updateTimerDisplay() {
     timerElement.textContent = formatTime(timeLeft);
@@ -59,14 +60,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setNewTimer() {
-    const input = document.getElementById("timeInput").value.trim();
+    const input = timeInput.value.trim();
     const match = input.match(/^(\d{1,2}):([0-5]\d)$/);
 
     if (!match) {
-      alert("Please enter a valid time in MM:SS format (e.g., 25:00)");
+      errorMsg.textContent =
+        "Invalid time format. Use MM:SS format (e.g. 25:00).";
       return;
     }
 
+    errorMsg.textContent = "";
     const minutes = parseInt(match[1], 10);
     const seconds = parseInt(match[2], 10);
     const totalSeconds = minutes * 60 + seconds;
