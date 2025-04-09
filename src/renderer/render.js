@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function resetCountdown() {
     clearInterval(countdownInterval);
     countdownInterval = null;
-    timeLeft = userMinutes * 60;
+    timeLeft = initialTime;
     studiedSeconds = 0;
     isStudySession = true;
     updateTimerDisplay();
@@ -75,21 +75,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setNewTimer() {
     const input = timeInput.value.trim();
-    const match = input.match(/^(\d{1,2}):([0-5]\d)$/);
+    let totalSeconds;
 
-    if (!match) {
+    const mmssMatch = input.match(/^(\d{1,2}):([0-5]\d)$/);
+    const secondsOnlyMatch = input.match(/^(\d{1,3})$/);
+
+    if (mmssMatch) {
+      const minutes = parseInt(mmssMatch[1], 10);
+      const seconds = parseInt(mmssMatch[2], 10);
+      totalSeconds = minutes * 60 + seconds;
+    } else if (secondsOnlyMatch) {
+      totalSeconds = parseInt(secondsOnlyMatch[1], 10);
+    } else {
       errorMsg.textContent =
-        "Invalid time format. Use MM:SS format (e.g. 25:00).";
+        "Invalid time format. Use MM:SS or SS format (e.g. 25:00 or 45).";
       return;
     }
 
     errorMsg.textContent = "";
-    const minutes = parseInt(match[1], 10);
-    const seconds = parseInt(match[2], 10);
-    const totalSeconds = minutes * 60 + seconds;
-
-    userMinutes = minutes; // Update global userMinutes variable
-
+    userMinutes = Math.floor(totalSeconds / 60); // Update global
+    initialTime = totalSeconds;
+    timeLeft = totalSeconds;
     setNewTimerFromSeconds(totalSeconds);
   }
 
