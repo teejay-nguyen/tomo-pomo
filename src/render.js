@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let timeLeft = initialTime;
   let countdownInterval = null;
   let studiedSeconds = 0;
+  let isStudySession = true; // Defaults to true for regular sessions
 
   const timerElement = document.getElementById("timer");
   const setTimerBtn = document.getElementById("set-timer-btn");
@@ -33,14 +34,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (countdownInterval || timeLeft <= 0) return;
     countdownInterval = setInterval(() => {
       timeLeft--;
-      studiedSeconds++;
+      if (isStudySession) studiedSeconds++;
       updateTimerDisplay();
 
       if (timeLeft <= 0) {
         clearInterval(countdownInterval);
         countdownInterval = null;
-        window.electronAPI.saveStudyTime(studiedSeconds);
-        studiedSeconds = 0;
+
+        if (isStudySession) {
+          window.electronAPI.saveStudyTime(studiedSeconds);
+          studiedSeconds = 0;
+        }
       }
     }, 1000);
   }
@@ -56,6 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(countdownInterval);
     countdownInterval = null;
     timeLeft = userMinutes * 60;
+    studiedSeconds = 0;
+    isStudySession = true;
     updateTimerDisplay();
   }
 
@@ -85,10 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
     initialTime = seconds;
     timeLeft = seconds;
     studiedSeconds = 0;
+    isStudySession = true;
     updateTimerDisplay();
   }
 
   shortBreakBtn.addEventListener("click", () => {
+    isStudySession = false;
     userMinutes = 5;
     timeLeft = userMinutes * 60;
     updateTimerDisplay();
@@ -96,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   longBreakBtn.addEventListener("click", () => {
+    isStudySession = false;
     userMinutes = 15;
     timeLeft = userMinutes * 60;
     updateTimerDisplay();
