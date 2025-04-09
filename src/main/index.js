@@ -14,8 +14,8 @@ let mainWindow;
 app.whenReady().then(() => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 400,
-    height: 400,
+    width: 500,
+    height: 550,
     frame: false,
     resizable: false,
     maximizable: false,
@@ -68,8 +68,8 @@ ipcMain.handle("get-study-data", () => {
 
 ipcMain.on("open-stats-window", () => {
   const statsWindow = new BrowserWindow({
-    width: 400,
-    height: 400,
+    width: 500,
+    height: 550,
     frame: false,
     resizable: false,
     maximizable: false,
