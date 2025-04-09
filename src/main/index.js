@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
 const fs = require("fs");
 
-const dataFile = path.join(__dirname, "study-log.json");
+const dataFile = path.join(__dirname, "../data", "study-log.json");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -21,12 +21,12 @@ app.whenReady().then(() => {
     maximizable: false,
     webPreferences: {
       contextIsolation: true,
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "../preload", "preload.js"),
     },
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, "index.html"));
+  mainWindow.loadFile(path.join(__dirname, "../renderer", "index.html"));
 });
 
 ipcMain.on("close-app", () => {
@@ -75,9 +75,9 @@ ipcMain.on("open-stats-window", () => {
     maximizable: false,
     webPreferences: {
       contextIsolation: true,
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "../preload", "preload.js"),
     },
   });
 
-  statsWindow.loadFile(path.join(__dirname, "stats.html"));
+  statsWindow.loadFile(path.join(__dirname, "../renderer", "stats.html"));
 });

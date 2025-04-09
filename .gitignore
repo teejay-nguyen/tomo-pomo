@@ -92,4 +92,4 @@ typings/
 out/
 
 # User Files
-src/study-log.json
+src/data/study-log.json
