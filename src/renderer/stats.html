@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Study Stats</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <style>
       body {
         font-family: Arial;
@@ -49,31 +50,49 @@
       console.log("Study data loaded:", data); // DEBUG
       const tbody = document.getElementById("statsBody");
 
+      // Convert to sorted array
+      const entries = Object.entries(data).sort(
+        ([a], [b]) => new Date(a) - new Date(b)
+      );
+
+      // Populate table with ALL entries
+      entries.forEach(([date, seconds]) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        const formatted = `${mins}m ${secs}s`;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${date}</td><td>${formatted}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      // Only use the 5 most recent entries for the chart
+      const recent = entries.slice(-5);
+
       const labels = [];
-      const minutes = [];
+      const durationsInSeconds = [];
+      const durationLabels = [];
 
-      Object.entries(data)
-        .sort()
-        .forEach(([date, seconds]) => {
-          const mins = Math.floor(seconds / 60);
-          labels.push(date);
-          minutes.push(mins);
+      recent.forEach(([date, seconds]) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        const formatted = `${mins}m ${secs}s`;
 
-          const tr = document.createElement("tr");
-          tr.innerHTML = `<td>${date}</td><td>${mins} min</td>`;
-          tbody.appendChild(tr);
-        });
+        labels.push(date);
+        durationsInSeconds.push(seconds / 60); // use minutes for bar height
+        durationLabels.push(formatted);
+      });
 
       // Chart.js rendering
-      const ctx = document.getElementById("studyChart").getContext("2d");
+      const ctx = document.getElementById("statsChart").getContext("2d");
       new Chart(ctx, {
         type: "bar",
         data: {
           labels: labels,
           datasets: [
             {
-              label: "Minutes Studied",
-              data: minutes,
+              label: "Time Studied",
+              data: durationsInSeconds,
               backgroundColor: "#4caf50",
               borderRadius: 6,
             },
@@ -81,6 +100,20 @@
         },
         options: {
           responsive: true,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  return ` ${durationLabels[context.dataIndex]}`;
+                },
+              },
+            },
+            datalabels: {
+              anchor: "end",
+              align: "top",
+              formatter: (value, context) => durationLabels[context.dataIndex],
+            },
+          },
           scales: {
             y: {
               beginAtZero: true,
@@ -97,6 +130,7 @@
             },
           },
         },
+        plugins: [ChartDataLabels],
       });
     });
   </script>
