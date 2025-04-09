@@ -34,7 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (countdownInterval || timeLeft <= 0) return;
     countdownInterval = setInterval(() => {
       timeLeft--;
-      if (isStudySession) studiedSeconds++;
+      if (isStudySession) {
+        studiedSeconds++;
+
+        if (studiedSeconds % 30 === 0) {
+          window.electronAPI.saveStudyTime(studiedSeconds);
+          studiedSeconds = 0; // Reset after logging
+        }
+      }
       updateTimerDisplay();
 
       if (timeLeft <= 0) {
@@ -42,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         countdownInterval = null;
 
         if (isStudySession) {
+          // Log the remaining time if the total time is not divisible by 30
           window.electronAPI.saveStudyTime(studiedSeconds);
           studiedSeconds = 0;
         }
