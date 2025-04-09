@@ -112,17 +112,17 @@ document.addEventListener("DOMContentLoaded", () => {
   shortBreakBtn.addEventListener("click", () => {
     isStudySession = false;
     userMinutes = 5;
+    initialTime = userMinutes * 60;
     timeLeft = userMinutes * 60;
     updateTimerDisplay();
-    startCountdown();
   });
 
   longBreakBtn.addEventListener("click", () => {
     isStudySession = false;
     userMinutes = 15;
+    initialTime = userMinutes * 60;
     timeLeft = userMinutes * 60;
     updateTimerDisplay();
-    startCountdown();
   });
 
   setTimerBtn.addEventListener("click", setNewTimer);
